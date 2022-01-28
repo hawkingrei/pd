@@ -431,14 +431,7 @@ func (h *ruleHandler) GetAllGroupBundles(w http.ResponseWriter, r *http.Request)
 // @Router /config/placement-rule [post]
 func (h *ruleHandler) SetAllGroupBundles(w http.ResponseWriter, r *http.Request) {
 	wwzCnt.Add(1)
-	if wwzCnt.Load()%2 == 0 {
-		h.rd.JSON(w, http.StatusInternalServerError, "wwz")
-		return
-	} else {
-		time.Sleep(time.Second * 10)
-		h.rd.JSON(w, http.StatusInternalServerError, "wwz timeout")
-		return
-	}
+	time.Sleep(time.Second * 10)
 	cluster := getCluster(r)
 	if !cluster.GetOpts().IsPlacementRulesEnabled() {
 		h.rd.JSON(w, http.StatusPreconditionFailed, errPlacementDisabled.Error())
@@ -489,12 +482,7 @@ func (h *ruleHandler) GetGroupBundle(w http.ResponseWriter, r *http.Request) {
 // @Router /config/placement-rule [delete]
 func (h *ruleHandler) DeleteGroupBundle(w http.ResponseWriter, r *http.Request) {
 	wwzCnt.Add(1)
-	if wwzCnt.Load()%2 == 0 {
-		h.rd.JSON(w, http.StatusInternalServerError, "wwz")
-		return
-	} else {
-		time.Sleep(time.Second * 10)
-	}
+	time.Sleep(time.Second * 10)
 	cluster := getCluster(r)
 	if !cluster.GetOpts().IsPlacementRulesEnabled() {
 		h.rd.JSON(w, http.StatusPreconditionFailed, errPlacementDisabled.Error())
@@ -524,12 +512,7 @@ func (h *ruleHandler) DeleteGroupBundle(w http.ResponseWriter, r *http.Request) 
 // @Router /config/placement-rule/{group} [post]
 func (h *ruleHandler) SetGroupBundle(w http.ResponseWriter, r *http.Request) {
 	wwzCnt.Add(1)
-	if wwzCnt.Load()%2 == 0 {
-		h.rd.JSON(w, http.StatusInternalServerError, "wwz")
-		return
-	} else {
-		time.Sleep(time.Second * 10)
-	}
+	time.Sleep(time.Second * 10)
 	cluster := getCluster(r)
 	if !cluster.GetOpts().IsPlacementRulesEnabled() {
 		h.rd.JSON(w, http.StatusPreconditionFailed, errPlacementDisabled.Error())
