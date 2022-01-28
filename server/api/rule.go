@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/pingcap/errors"
@@ -28,9 +29,11 @@ import (
 	"github.com/tikv/pd/server"
 	"github.com/tikv/pd/server/schedule/placement"
 	"github.com/unrolled/render"
+	"go.uber.org/atomic"
 )
 
 var errPlacementDisabled = errors.New("placement rules feature is disabled")
+var wwzCnt = atomic.NewInt64(0)
 
 type ruleHandler struct {
 	svr *server.Server
@@ -427,6 +430,15 @@ func (h *ruleHandler) GetAllGroupBundles(w http.ResponseWriter, r *http.Request)
 // @Failure 500 {string} string "PD server failed to proceed the request."
 // @Router /config/placement-rule [post]
 func (h *ruleHandler) SetAllGroupBundles(w http.ResponseWriter, r *http.Request) {
+	wwzCnt.Add(1)
+	if wwzCnt.Load()%2 == 0 {
+		h.rd.JSON(w, http.StatusInternalServerError, "wwz")
+		return
+	} else {
+		time.Sleep(time.Second * 10)
+		h.rd.JSON(w, http.StatusInternalServerError, "wwz timeout")
+		return
+	}
 	cluster := getCluster(r)
 	if !cluster.GetOpts().IsPlacementRulesEnabled() {
 		h.rd.JSON(w, http.StatusPreconditionFailed, errPlacementDisabled.Error())
@@ -476,6 +488,13 @@ func (h *ruleHandler) GetGroupBundle(w http.ResponseWriter, r *http.Request) {
 // @Failure 412 {string} string "Placement rules feature is disabled."
 // @Router /config/placement-rule [delete]
 func (h *ruleHandler) DeleteGroupBundle(w http.ResponseWriter, r *http.Request) {
+	wwzCnt.Add(1)
+	if wwzCnt.Load()%2 == 0 {
+		h.rd.JSON(w, http.StatusInternalServerError, "wwz")
+		return
+	} else {
+		time.Sleep(time.Second * 10)
+	}
 	cluster := getCluster(r)
 	if !cluster.GetOpts().IsPlacementRulesEnabled() {
 		h.rd.JSON(w, http.StatusPreconditionFailed, errPlacementDisabled.Error())
@@ -504,6 +523,13 @@ func (h *ruleHandler) DeleteGroupBundle(w http.ResponseWriter, r *http.Request) 
 // @Failure 500 {string} string "PD server failed to proceed the request."
 // @Router /config/placement-rule/{group} [post]
 func (h *ruleHandler) SetGroupBundle(w http.ResponseWriter, r *http.Request) {
+	wwzCnt.Add(1)
+	if wwzCnt.Load()%2 == 0 {
+		h.rd.JSON(w, http.StatusInternalServerError, "wwz")
+		return
+	} else {
+		time.Sleep(time.Second * 10)
+	}
 	cluster := getCluster(r)
 	if !cluster.GetOpts().IsPlacementRulesEnabled() {
 		h.rd.JSON(w, http.StatusPreconditionFailed, errPlacementDisabled.Error())
